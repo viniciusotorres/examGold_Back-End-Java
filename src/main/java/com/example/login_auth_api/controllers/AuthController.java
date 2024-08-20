@@ -35,9 +35,9 @@ public class AuthController {
 
         if(passwordEncoder.matches(loginRequestDTO.password(), user.getPassword())){
             var token = tokenService.generateToken(user);
-            return ResponseEntity.ok(new ResponseDTO(user.getUsername(), token, "Login efetuado com sucesso", HttpStatus.OK.value(), user.getId()));
+            return ResponseEntity.ok(new ResponseDTO(user.getUsername(), user.getBirthDate(), token, "Login efetuado com sucesso", HttpStatus.OK.value(), user.getId()));
         }
-        return ResponseEntity.badRequest().body(new ResponseDTO(null, null, "Login falhou", HttpStatus.BAD_REQUEST.value(), null));
+        return ResponseEntity.badRequest().body(new ResponseDTO(null, null, null, "Login falhou", HttpStatus.BAD_REQUEST.value(), null));
     }
 
     //--> Método de registro
@@ -50,12 +50,13 @@ public class AuthController {
             newUser.setEmail(registerRequestDTO.email());
             newUser.setUsername(registerRequestDTO.name());
             newUser.setPassword(passwordEncoder.encode(registerRequestDTO.password()));
+            newUser.setBirthDate(registerRequestDTO.birthDate());
             this.userRepository.save(newUser);
 
             String token = tokenService.generateToken(newUser);
-            return ResponseEntity.ok(new ResponseDTO(newUser.getUsername(), token, "Usuário registrado com sucesso", HttpStatus.OK.value(), newUser.getId()));
+            return ResponseEntity.ok(new ResponseDTO(newUser.getUsername(), newUser.getBirthDate(),token, "Usuário registrado com sucesso", HttpStatus.OK.value(), newUser.getId()));
         }
-        return ResponseEntity.badRequest().body(new ResponseDTO(null, null, "Registro falhou", HttpStatus.BAD_REQUEST.value(), null));
+        return ResponseEntity.badRequest().body(new ResponseDTO(null, null, null,"Registro falhou", HttpStatus.BAD_REQUEST.value(), null));
     }
 
 }
