@@ -22,6 +22,7 @@ public class User {
     private String email;
     private String password;
     private String birthDate;
+    private Boolean itsTeacher;
 
     @ManyToOne // Isso quer dizer que um usuário pertence a uma escola (muitos para um)
     @JoinColumn(name = "school_id") // Nome da coluna que faz a relação

@@ -17,3 +17,10 @@ CREATE TABLE users (
                        school_id BIGINT,
                        CONSTRAINT fk_school FOREIGN KEY (school_id) REFERENCES schools(id)
 );
+
+ALTER TABLE users
+    ADD COLUMN its_teacher BOOLEAN;
+
+
+
+

@@ -33,14 +33,21 @@ public class AuthController {
     //--> Método de login
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginRequestDTO loginRequestDTO){
+        // Busca o usuário pelo email
         var user = userRepository.findByEmail(loginRequestDTO.email())
                 .orElseThrow(() -> new RuntimeException("User Not Found"));
 
+        // Verifica se o usuário é um professor
+        if (user.getItsTeacher() != loginRequestDTO.itsTeacher()){
+            return ResponseEntity.badRequest().body(new ResponseDTO(null, null, null, "Você está usando credencial incorreta.", HttpStatus.BAD_REQUEST.value(), null, false));
+        }
+
+        // Verifica se a senha está correta
         if(passwordEncoder.matches(loginRequestDTO.password(), user.getPassword())){
             var token = tokenService.generateToken(user);
-            return ResponseEntity.ok(new ResponseDTO(user.getUsername(), user.getBirthDate(), token, "Login efetuado com sucesso", HttpStatus.OK.value(), user.getId()));
+            return ResponseEntity.ok(new ResponseDTO(user.getUsername(), user.getBirthDate(), token, "Login efetuado com sucesso", HttpStatus.OK.value(), user.getId(), user.getItsTeacher()));
         }
-        return ResponseEntity.badRequest().body(new ResponseDTO(null, null, null, "Login falhou", HttpStatus.BAD_REQUEST.value(), null));
+        return ResponseEntity.badRequest().body(new ResponseDTO(null, null, null, "Login falhou", HttpStatus.BAD_REQUEST.value(), null, false));
     }
 
     //--> Método de registro
@@ -55,6 +62,7 @@ public class AuthController {
             newUser.setUsername(registerRequestDTO.name());
             newUser.setPassword(passwordEncoder.encode(registerRequestDTO.password()));
             newUser.setBirthDate(registerRequestDTO.birthDate());
+            newUser.setItsTeacher(registerRequestDTO.itsTeacher());
 
             Scholl scholl = schollRepository.findById(registerRequestDTO.schollId())
                     .orElseThrow(() -> new RuntimeException("Escola não encontrada!"));
@@ -64,9 +72,9 @@ public class AuthController {
             this.userRepository.save(newUser);
 
             String token = tokenService.generateToken(newUser);
-            return ResponseEntity.ok(new ResponseDTO(newUser.getUsername(), newUser.getBirthDate(),token, "Usuário registrado com sucesso", HttpStatus.OK.value(), newUser.getId()));
+            return ResponseEntity.ok(new ResponseDTO(newUser.getUsername(), newUser.getBirthDate(),token, "Usuário registrado com sucesso", HttpStatus.OK.value(), newUser.getId(), newUser.getItsTeacher()));
         }
-        return ResponseEntity.badRequest().body(new ResponseDTO(null, null, null,"Registro falhou", HttpStatus.BAD_REQUEST.value(), null));
+        return ResponseEntity.badRequest().body(new ResponseDTO(null, null, null,"Registro falhou", HttpStatus.BAD_REQUEST.value(), null, false));
     }
 
 }
