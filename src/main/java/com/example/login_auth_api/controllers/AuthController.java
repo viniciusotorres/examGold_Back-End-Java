@@ -1,10 +1,12 @@
 package com.example.login_auth_api.controllers;
 
+import com.example.login_auth_api.domain.user.Scholl;
 import com.example.login_auth_api.domain.user.User;
 import com.example.login_auth_api.dto.LoginRequestDTO;
 import com.example.login_auth_api.dto.RegisterRequestDTO;
 import com.example.login_auth_api.dto.ResponseDTO;
 import com.example.login_auth_api.infra.security.TokenService;
+import com.example.login_auth_api.repositories.SchollRepository;
 import com.example.login_auth_api.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.antlr.v4.runtime.Token;
@@ -26,6 +28,7 @@ public class AuthController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
+    private final SchollRepository schollRepository;
 
     //--> Método de login
     @PostMapping("/login")
@@ -45,12 +48,19 @@ public class AuthController {
     public ResponseEntity register(@RequestBody RegisterRequestDTO registerRequestDTO){
         Optional<User> user = userRepository.findByEmail(registerRequestDTO.email());
 
+
         if(user.isEmpty()){
             var newUser = new User();
             newUser.setEmail(registerRequestDTO.email());
             newUser.setUsername(registerRequestDTO.name());
             newUser.setPassword(passwordEncoder.encode(registerRequestDTO.password()));
             newUser.setBirthDate(registerRequestDTO.birthDate());
+
+            Scholl scholl = schollRepository.findById(registerRequestDTO.schollId())
+                    .orElseThrow(() -> new RuntimeException("Escola não encontrada!"));
+
+            newUser.setScholl(scholl);
+
             this.userRepository.save(newUser);
 
             String token = tokenService.generateToken(newUser);
