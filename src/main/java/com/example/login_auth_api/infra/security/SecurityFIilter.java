@@ -1,7 +1,7 @@
 package com.example.login_auth_api.infra.security;
 
 import com.example.login_auth_api.repositories.UserRepository;
-import com.example.login_auth_api.domain.user.User;
+import com.example.login_auth_api.domain.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Collections;
 
 @Component

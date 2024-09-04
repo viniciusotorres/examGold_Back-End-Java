@@ -1,6 +1,6 @@
 package com.example.login_auth_api.services;
 
-import com.example.login_auth_api.domain.user.User;
+import com.example.login_auth_api.domain.User;
 import com.example.login_auth_api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

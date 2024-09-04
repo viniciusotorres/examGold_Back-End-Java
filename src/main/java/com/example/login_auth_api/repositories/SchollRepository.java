@@ -1,6 +1,6 @@
 package com.example.login_auth_api.repositories;
 
-import com.example.login_auth_api.domain.user.Scholl;
+import com.example.login_auth_api.domain.School;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -8,12 +8,12 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface SchollRepository  extends JpaRepository<Scholl, Long> {
-    Optional<Scholl> findByName(String name);
-    Optional<Scholl> findByCnpj(String cnpj);
-    Optional<Scholl> findByEmail(String email);
+public interface SchollRepository  extends JpaRepository<School, Long> {
+    Optional<School> findByName(String name);
+    Optional<School> findByCnpj(String cnpj);
+    Optional<School> findByEmail(String email);
     @NonNull
-    Optional<Scholl> findById(@NonNull Long id);
+    Optional<School> findById(@NonNull Long id);
 
     void deleteById(Long id);
 

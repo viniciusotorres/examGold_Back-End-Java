@@ -1,7 +1,7 @@
 package com.example.login_auth_api.controllers;
 
-import com.example.login_auth_api.domain.user.Scholl;
-import com.example.login_auth_api.dto.ResponseCreateSchoolDTO;
+import com.example.login_auth_api.domain.School;
+import com.example.login_auth_api.dto.ResponseCreate;
 import com.example.login_auth_api.repositories.SchollRepository;
 import com.example.login_auth_api.services.SchollService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,26 +20,32 @@ public class SchollController {
     @Autowired
     private SchollRepository schollRepository;
 
-    //--> Método de busca por todos os usuários
+    /*---------------------------------------*/
+    //          LISTANDO TODOS AS ESCOLAS    //
+    /*---------------------------------------*/
     @GetMapping("/all")
-    public ResponseEntity<Iterable<Scholl>> getAllSchools(){
+    public ResponseEntity<Iterable<School>> getAllSchools(){
         return ResponseEntity.ok(schollService.findAll());
     }
 
-    //--> Método de busca por id
+    /*---------------------------------------*/
+    //          LISTANDO ESCOLA POR ID       //
+    /*---------------------------------------*/
     @GetMapping("{id}")
-    public ResponseEntity<Scholl> getSchoolById(@PathVariable Long id){
-        Optional<Scholl> scholl = schollService.findById(id);
+    public ResponseEntity<School> getSchoolById(@PathVariable Long id){
+        Optional<School> scholl = schollService.findById(id);
         return scholl.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    //--> Método para criar uma nova escola
+    /*---------------------------------------*/
+    //          CRIANDO UMA ESCOLA           //
+    /*---------------------------------------*/
     @PostMapping("/create")
-    public ResponseEntity createSchool(@RequestBody Scholl school){
-        Optional<Scholl> scholl = schollRepository.findByCnpj(school.getCnpj());
+    public ResponseEntity createSchool(@RequestBody School school){
+        Optional<School> scholl = schollRepository.findByCnpj(school.getCnpj());
 
         if(scholl.isEmpty()){
-            var newScholl = new Scholl();
+            var newScholl = new School();
             newScholl.setName(school.getName());
             newScholl.setCnpj(school.getCnpj());
             newScholl.setAddress(school.getAddress());
@@ -47,32 +53,36 @@ public class SchollController {
             newScholl.setEmail(school.getEmail());
             this.schollRepository.save(newScholl);
 
-            return ResponseEntity.ok(new ResponseCreateSchoolDTO(newScholl.getName(), "Escola cadastrada com sucesso.", HttpStatus.OK.value()));
+            return ResponseEntity.ok(new ResponseCreate(newScholl.getName(), "Escola cadastrada com sucesso.", HttpStatus.OK.value(), "Success"));
         }
         return ResponseEntity.badRequest().body("Escola já cadastrada");
     }
 
-    //--> Método para deletar uma escola
+    /*---------------------------------------*/
+    //          DELETANDO UMA ESCOLA         //
+    /*---------------------------------------*/
     @DeleteMapping("/delete/{id}")
     public ResponseEntity deleteSchool(@PathVariable Long id){
-        Optional<Scholl> scholl = schollService.findById(id);
+        Optional<School> scholl = schollService.findById(id);
 
         if(scholl.isPresent()){
             schollService.delete(id);
-            return ResponseEntity.ok(new ResponseCreateSchoolDTO(scholl.get().getName(), "Escola deletada com sucesso.", HttpStatus.OK.value()));
+            return ResponseEntity.ok(new ResponseCreate(scholl.get().getName(), "Escola deletada com sucesso.", HttpStatus.OK.value(), "Success"));
         }
-        return ResponseEntity.badRequest().body(new ResponseCreateSchoolDTO(null, "Escola não encontrada.", HttpStatus.BAD_REQUEST.value()));
+        return ResponseEntity.badRequest().body(new ResponseCreate(null, "Escola não encontrada.", HttpStatus.BAD_REQUEST.value(), "Error"));
     }
 
-    //--> Método para atualizar uma escola
+    /*---------------------------------------*/
+    //          ATUALIZANDO UMA ESCOLA        //
+    /*---------------------------------------*/
     @PutMapping("/update/{id}")
-    public ResponseEntity updateSchool(@RequestBody Scholl scholl, @PathVariable Long id){
-        Optional<Scholl> schollNew = schollService.findById(id);
+    public ResponseEntity updateSchool(@RequestBody School scholl, @PathVariable Long id){
+        Optional<School> schollNew = schollService.findById(id);
 
         if(schollNew.isPresent()){
             schollService.update(id, scholl);
-            return ResponseEntity.ok(new ResponseCreateSchoolDTO(scholl.getName(), "Escola atualizada com sucesso.", HttpStatus.OK.value()));
+            return ResponseEntity.ok(new ResponseCreate(scholl.getName(), "Escola atualizada com sucesso.", HttpStatus.OK.value(), "Success"));
         }
-        return ResponseEntity.badRequest().body(new ResponseCreateSchoolDTO(null, "Escola não encontrada.", HttpStatus.BAD_REQUEST.value()));
+        return ResponseEntity.badRequest().body(new ResponseCreate(null, "Escola não encontrada.", HttpStatus.BAD_REQUEST.value(), "Error"));
     }
 }

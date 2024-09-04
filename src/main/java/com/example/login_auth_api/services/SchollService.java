@@ -1,6 +1,6 @@
 package com.example.login_auth_api.services;
 
-import com.example.login_auth_api.domain.user.Scholl;
+import com.example.login_auth_api.domain.School;
 import com.example.login_auth_api.repositories.SchollRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,11 +13,11 @@ public class SchollService {
     @Autowired
     private SchollRepository schollRepository;
 
-    public Iterable<Scholl> findAll(){
+    public Iterable<School> findAll(){
         return schollRepository.findAll();
     }
 
-    public Optional<Scholl> findById(Long id){
+    public Optional<School> findById(Long id){
         return schollRepository.findById(id);
     }
 
@@ -25,10 +25,10 @@ public class SchollService {
         schollRepository.findById(id).ifPresent(scholl -> schollRepository.deleteById(id));
     }
 
-    public void update(Long id, Scholl scholl){
-        Optional<Scholl> schollOptional = schollRepository.findById(id);
+    public void update(Long id, School scholl){
+        Optional<School> schollOptional = schollRepository.findById(id);
         if(schollOptional.isPresent()){
-            Scholl scholl1 = schollOptional.get();
+            School scholl1 = schollOptional.get();
             scholl1.setName(scholl.getName());
             scholl1.setCnpj(scholl.getCnpj());
             scholl1.setAddress(scholl.getAddress());
