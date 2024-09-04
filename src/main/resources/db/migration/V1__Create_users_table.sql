@@ -21,6 +21,15 @@ CREATE TABLE users (
 ALTER TABLE users
     ADD COLUMN its_teacher BOOLEAN;
 
+CREATE TABLE teams (
+                       id_team SERIAL PRIMARY KEY,
+                       name_team VARCHAR(255) NOT NULL,
+                       description_team TEXT,
+                       school_id BIGINT,
+                       CONSTRAINT fk_school FOREIGN KEY (school_id) REFERENCES schools(id)
+);
 
+ALTER TABLE users ADD COLUMN team_id BIGINT;
 
+ALTER TABLE users ADD CONSTRAINT fk_team FOREIGN KEY (team_id) REFERENCES teams(id_team);
 

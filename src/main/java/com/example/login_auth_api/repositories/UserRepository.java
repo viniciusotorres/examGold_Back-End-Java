@@ -1,6 +1,6 @@
 package com.example.login_auth_api.repositories;
 
-import com.example.login_auth_api.domain.user.User;
+import com.example.login_auth_api.domain.User;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,4 +14,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @NonNull
     Optional<User> findById(@NonNull Long id);
+
+
 }

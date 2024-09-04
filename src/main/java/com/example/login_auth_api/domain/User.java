@@ -1,4 +1,4 @@
-package com.example.login_auth_api.domain.user;
+package com.example.login_auth_api.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
@@ -24,10 +24,15 @@ public class User {
     private String birthDate;
     private Boolean itsTeacher;
 
+    @ManyToOne
+    @JoinColumn(name = "team_id")
+    @JsonBackReference
+    private Team team;
+
     @ManyToOne // Isso quer dizer que um usuário pertence a uma escola (muitos para um)
     @JoinColumn(name = "school_id") // Nome da coluna que faz a relação
     @JsonBackReference // Evita recursividade infinita
-    private Scholl scholl; // Escola que o usuário pertence
+    private School scholl; // Escola que o usuário pertence
 
 
 }

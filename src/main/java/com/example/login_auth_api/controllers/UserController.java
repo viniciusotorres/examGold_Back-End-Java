@@ -1,7 +1,6 @@
 package com.example.login_auth_api.controllers;
 
-import com.example.login_auth_api.domain.user.User;
-import com.example.login_auth_api.repositories.UserRepository;
+import com.example.login_auth_api.domain.User;
 import com.example.login_auth_api.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +19,18 @@ public class UserController {
     private UserService userService;
 
 
-    //--> Método de busca por id
+    /*---------------------------------------*/
+    //          LISTANDO USUÁRIO POR ID      //
+    /*---------------------------------------*/
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id){
         Optional<User> user =  userService.findById(id);
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    //--> Método de busca por todos os usuários
+    /*---------------------------------------*/
+    //       LISTANDO TODOS OS USUÁRIOS      //
+    /*---------------------------------------*/
     @GetMapping("/users")
     public ResponseEntity<Iterable<User>> getAllUsers(){
         return ResponseEntity.ok(userService.findAll());

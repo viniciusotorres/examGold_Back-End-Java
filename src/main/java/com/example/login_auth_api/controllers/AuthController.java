@@ -1,7 +1,7 @@
 package com.example.login_auth_api.controllers;
 
-import com.example.login_auth_api.domain.user.Scholl;
-import com.example.login_auth_api.domain.user.User;
+import com.example.login_auth_api.domain.School;
+import com.example.login_auth_api.domain.User;
 import com.example.login_auth_api.dto.LoginRequestDTO;
 import com.example.login_auth_api.dto.RegisterRequestDTO;
 import com.example.login_auth_api.dto.ResponseDTO;
@@ -9,7 +9,6 @@ import com.example.login_auth_api.infra.security.TokenService;
 import com.example.login_auth_api.repositories.SchollRepository;
 import com.example.login_auth_api.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.antlr.v4.runtime.Token;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,7 +29,9 @@ public class AuthController {
     private final TokenService tokenService;
     private final SchollRepository schollRepository;
 
-    //--> Método de login
+    /*---------------------------------------*/
+    //        FAZENDO O LOGIN DO USUÁRIO     //
+    /*---------------------------------------*/
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginRequestDTO loginRequestDTO){
         // Busca o usuário pelo email
@@ -50,7 +51,9 @@ public class AuthController {
         return ResponseEntity.badRequest().body(new ResponseDTO(null, null, null, "Login falhou", HttpStatus.BAD_REQUEST.value(), null, false));
     }
 
-    //--> Método de registro
+    /*---------------------------------------*/
+    //      FAZENDO O REGISTRO DO USUÁRIO    //
+    /*---------------------------------------*/
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody RegisterRequestDTO registerRequestDTO){
         Optional<User> user = userRepository.findByEmail(registerRequestDTO.email());
@@ -64,7 +67,7 @@ public class AuthController {
             newUser.setBirthDate(registerRequestDTO.birthDate());
             newUser.setItsTeacher(registerRequestDTO.itsTeacher());
 
-            Scholl scholl = schollRepository.findById(registerRequestDTO.schollId())
+            School scholl = schollRepository.findById(registerRequestDTO.schollId())
                     .orElseThrow(() -> new RuntimeException("Escola não encontrada!"));
 
             newUser.setScholl(scholl);

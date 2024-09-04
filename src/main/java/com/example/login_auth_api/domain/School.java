@@ -1,4 +1,4 @@
-package com.example.login_auth_api.domain.user;
+package com.example.login_auth_api.domain;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -15,7 +15,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Scholl {
+public class School {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
